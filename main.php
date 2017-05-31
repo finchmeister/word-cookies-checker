@@ -4,6 +4,7 @@ spl_autoload_register(function ($class_name) {
     include 'src/'. $class_name . '.php';
 });
 
+$start = microtime(1);
 if (isset($argv[1])) {
     $line = $argv[1];
 } else {
@@ -19,7 +20,6 @@ $permutes = $permute->getAllPermutes();
 
 echo $permute->getTotalCount() . " unique permutations\n";
 
-
 $detailedDictionary = new PearsonDictionary();
 $fastDictionary = new LocalDictionary();
 $dictionary = new ComboDictionary(
@@ -27,6 +27,7 @@ $dictionary = new ComboDictionary(
     $detailedDictionary
 );
 
+$i = 0;
 foreach ($permutes as $permuteI) {
     foreach ($permuteI as $word) {
         try {
@@ -36,8 +37,10 @@ foreach ($permutes as $permuteI) {
         }
         if ($wordModel) {
             echo $wordModel->getWord() . ": " . $wordModel->getDefinition() . "\n";
+            $i++;
         }
     }
 }
-
-
+$timeTaken = round(microtime(1) - $start, 2);
+echo "Found {$i} words\n";
+echo "Time taken: {$timeTaken}s\n";
