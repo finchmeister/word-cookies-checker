@@ -5,7 +5,7 @@
 3. Get words
 
 E.g.:
-```php
+```bash
 Jonathans-MBP:word-cookies-checker jfinch$ php main.php
 Enter your letters:
 oenyj
