@@ -4,11 +4,14 @@ spl_autoload_register(function ($class_name) {
     include 'src/'. $class_name . '.php';
 });
 
-echo "Enter your letters:\n";
+if (isset($argv[1])) {
+    $line = $argv[1];
+} else {
+    echo "Enter your letters:\n";
+    $line = trim(fgets(STDIN));
+}
 
-$line = strtoupper(trim(fgets(STDIN)));
-
-$letters = str_split($line);
+$letters = str_split(strtoupper($line));
 sort($letters);
 $permute = new Permute($letters);
 $permutes = $permute->getPermutes();
@@ -16,7 +19,13 @@ $permutes = $permute->getAllPermutes();
 
 echo $permute->getTotalCount() . " unique permutations\n";
 
-$dictionary = new PearsonDictionary();
+
+$detailedDictionary = new PearsonDictionary();
+$fastDictionary = new LocalDictionary();
+$dictionary = new ComboDictionary(
+    $fastDictionary,
+    $detailedDictionary
+);
 
 foreach ($permutes as $permuteI) {
     foreach ($permuteI as $word) {

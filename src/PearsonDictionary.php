@@ -4,20 +4,25 @@
 class PearsonDictionary implements DictionaryInterface
 {
 
-    protected $responseJson = '';
-
-    public function getWord($word): ?WordModel
+    public function makeApiRequest($word)
     {
         $url = "http://api.pearson.com/v2/dictionaries/entries?headword=$word&limit=1";
         try {
             $response = json_decode(file_get_contents($url));
+            return $response;
         } catch (Exception $e) {
             echo "API Call Failed " . $e->getMessage() . "\n";
         }
-        $this->responseJson = json_encode($response, JSON_PRETTY_PRINT);
+        return null;
+    }
+
+    public function getWord($word): ?WordModel
+    {
+        $response = $this->makeApiRequest($word);
         if (empty($response->results)) {
             return null;
         }
+
         $definition = $response->results[0]->senses[0]->definition ?? '~';
         if (is_array($definition)) {
             $definition = $definition[0];
